@@ -66,18 +66,17 @@ const Square = ({ value, onClick }) => {
  
 }
 
-const Board = ({ squares, onClick, winner, renderMoves}) => {
-  const [xIsNext, ] = useState(true);
-  
-  const xO = xIsNext ? "X" : "O";
+const Board = ({ squares, onClick, winner, xO, renderMoves}) => {
+ 
   
     return (
       <div style={containerStyle} className="gameBoard">
-        {renderMoves()}
-        <div id="statusArea" className="status" style={instructionsStyle}>Next player: <span>{winner ? "":  xO}</span></div>
+        {/* {renderMoves()} */}
+        <div id="statusArea" className="status" style={instructionsStyle}>Next player: 
+        <span>{!winner ? xO : ""}</span></div>
       <div id="winnerArea" className="winner" style={instructionsStyle}>Winner: 
       <span>{winner ? winner : ""}</span></div>
-        <button style={buttonStyle}>Reset</button>
+        <button style={buttonStyle} onClick = {renderMoves}>Reset</button>
         <div style={boardStyle}>
           
           {squares.map((square, i) => (
@@ -115,15 +114,21 @@ const Game = () => {
     setStepNumber(step);
     setXisNext(step % 2 === 0);
   };
+  
+  // const renderMoves = () =>
+  //   history.map((_step, move) => {
+  //     const destination = move ? `Go to move #${move}` : "Go to Start";
+  //     return (
+  //       <li key={move}>
+  //         <button onClick={() => jumpTo(move)}>{destination}</button>
+  //       </li>
+  //     );
+  //   });
 
-  const renderMoves = () =>
+    const renderMoves = () =>
     history.map((_step, move) => {
-      const destination = move ? `Go to move #${move}` : "Go to Start";
-      return (
-        <li key={move}>
-          <button onClick={() => jumpTo(move)}>{destination}</button>
-        </li>
-      );
+      const destination = !move ? jumpTo(move) : null;
+      return destination
     });
 
 
@@ -155,13 +160,12 @@ const gameWinner = (squares) => {
     return (
       <div className="game">
         <div className="game-board">
-          <Board squares={history[stepNumber]} onClick={handleClick} renderMoves={renderMoves} winner={winner} />
+          <Board squares={history[stepNumber]} onClick={handleClick} winner={winner} xO={xO} renderMoves={renderMoves}/>
         </div>
         <div>
-          <h3>History</h3>
-          {renderMoves()}
+          {/* <h3>History</h3>
+          {renderMoves()} */}
         </div>
-        {winner ? "Winner: " + winner : "Next Player: " + xO}
       </div>
       
     );
